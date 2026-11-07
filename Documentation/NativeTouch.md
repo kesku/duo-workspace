@@ -20,6 +20,6 @@ Duo enables Native touch on macOS 27.3 or later. It needs screen-recording and A
 
 Our tests used macOS 27.3. Duo doesn't override the private `SupportExternalTouchscreen` flag. USB plug-and-play support remains unverified.
 
-Our local self-build runs with SIP disabled and `amfi_get_out_of_my_way=0x1` in the boot arguments. Those settings affect the entire Mac and remain active after Duo quits. Duo doesn't change them for you. A normally secured Mac needs Apple's authorization for the entitlement.
+Enable **HID Virtual Device (development)** on the host App ID. Use an Apple Development identity and a Mac provisioning profile that authorizes the entitlement and includes your Mac. See the [signing setup](Development.md#signing-and-installation).
 
 Select **Session → Pointer mode → Native touch**. If the Mac can't create the device, Duo shows an error and falls back to Touch while the video keeps running.

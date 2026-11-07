@@ -277,6 +277,7 @@
 		C058B2AC585B365F68BFFE63 /* ClientCredentials.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCredentials.swift; sourceTree = "<group>"; };
 		C2BEF89B951A4F1F524A6815 /* HostEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostEditorView.swift; sourceTree = "<group>"; };
 		C30EC9DB7AC1FB72619B6E5E /* WorkspaceChromeEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceChromeEffect.swift; sourceTree = "<group>"; };
+		C4715CEABA3FC68D22A92F6C /* HostSigning.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = HostSigning.xcconfig; sourceTree = "<group>"; };
 		C4858A762763462CD28C7163 /* StreamQualityLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreamQualityLabel.swift; sourceTree = "<group>"; };
 		C7D0461C12D812DD5A4E50BB /* SessionPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionPresentationTests.swift; sourceTree = "<group>"; };
 		C7FBE7EB3A51C52B9F170DB4 /* RecoveryVideoFixture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryVideoFixture.swift; sourceTree = "<group>"; };
@@ -337,6 +338,7 @@
 		0FF4CCF59DC394FA169DCBB4 = {
 			isa = PBXGroup;
 			children = (
+				A5562A246A4546ECABD39AD7 /* Configuration */,
 				C868BF15F6AD6323453115E3 /* DuoClientTests */,
 				E529C68BBF959D9E0A14B301 /* iOS */,
 				25DD199F4198A8E2561B85CB /* macOS */,
@@ -464,6 +466,14 @@
 				F081F2C6F5B250BA29ED1E63 /* DuoWorkspace */,
 			);
 			name = Packages;
+			sourceTree = "<group>";
+		};
+		A5562A246A4546ECABD39AD7 /* Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				C4715CEABA3FC68D22A92F6C /* HostSigning.xcconfig */,
+			);
+			path = Configuration;
 			sourceTree = "<group>";
 		};
 		AEC66C76F3A80A6A2F00F5FD /* Sharing */ = {
@@ -989,12 +999,11 @@
 		};
 		72534B3AB10FED052D0DD0DC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4715CEABA3FC68D22A92F6C /* HostSigning.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGN_ENTITLEMENTS = Apps/macOS/DuoWorkspaceHost.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				DUO_LOCAL_SIGNING = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -1004,7 +1013,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = local.duoworkspace.host;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -1160,12 +1168,11 @@
 		};
 		B0E4EF5B03904C322ADA7C53 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C4715CEABA3FC68D22A92F6C /* HostSigning.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGN_ENTITLEMENTS = Apps/macOS/DuoWorkspaceHost.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				DUO_LOCAL_SIGNING = YES;
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1174,7 +1181,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = local.duoworkspace.host;
 				SDKROOT = macosx;
 			};
 			name = Debug;
