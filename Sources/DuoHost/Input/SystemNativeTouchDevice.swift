@@ -154,9 +154,7 @@ final class SystemNativeTouchDevice: NativeTouchDevice {
         for index in 0..<NativeTouchFrame.maximumContacts {
             if index < occupied.count {
                 let slot = occupied[index]
-                let x = UInt16((min(1,max(0,slot.finger.x))*32767).rounded())
-                let y = UInt16((min(1,max(0,slot.finger.y))*32767).rounded())
-                bytes += [slot.down ? 1 : 0, slot.hidID, UInt8(x&255), UInt8(x>>8), UInt8(y&255), UInt8(y>>8)]
+                bytes += NativeTouchDescriptor.contactReport(slot.finger, identifier: slot.hidID, isDown: slot.down)
             } else { bytes += Array(repeating: 0, count: 6) }
         }
         bytes.append(UInt8(occupied.count))

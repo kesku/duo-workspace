@@ -8,6 +8,8 @@ The phone tracks up to five fingers, each with a stable ID and a position within
 
 The [HID descriptor](../Sources/DuoHost/Input/NativeTouchDescriptor.swift) declares five finger slots. We report each finger's ID, position and down/up state. Movement updates can be combined, but presses and lifts are preserved so a quick tap doesn't disappear.
 
+Each occupied slot also reports `TouchValid` (finger confidence), including the lift report after its tip switch clears. [Apple's HID driver uses this field to distinguish Finger from Hand contacts](https://github.com/apple-oss-distributions/IOHIDFamily/blob/777ccd9698845aadf711e32d843c8c9b777431d9/IOHIDFamily/IOHIDEventDriver.cpp#L4089). Declaring a Finger collection alone isn't sufficient. Without confidence, some app controls can still respond while the Dock ignores native taps. Confidence occupies a former padding bit; contact IDs, coordinates and the 32-byte input report remain unchanged.
+
 Recognizing a HID digitizer isn't enough. macOS needs to know which display it belongs to. We pass the display's UUID as a `displayUUID` string and set `kIOHIDDisplayIntegratedKey` when creating the device, before activation. This works for the existing display in Control Mac and the virtual display in Use as Display. The association is undocumented and can change with macOS updates.
 
 Keyboard input sends key events. The toolbar remembers the last touch position, so Right-click and the lower trackpad continue from where you touched.
