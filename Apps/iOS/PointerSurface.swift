@@ -75,6 +75,8 @@ struct PointerSurface: UIViewRepresentable {
         private weak var revealGesture: UIPanGestureRecognizer?
         private weak var pointerPanGesture: UIPanGestureRecognizer?
         private weak var scrollGesture: UIPanGestureRecognizer?
+        private weak var bottomEdgeGesture: UIPanGestureRecognizer?
+        private var edgeSwipeStart: CGPoint?
         private var revealStart: CGPoint?
         private var panOrigin: CGPoint?
         private var scrollOrigin: CGPoint?
@@ -106,6 +108,15 @@ struct PointerSurface: UIViewRepresentable {
             revealGesture = reveal
             view.addGestureRecognizer(reveal)
             for gesture in inputGestures { gesture.require(toFail: reveal) }
+            if let pad = view as? PointerPadView {
+                let dock = pad.bottomEdgeGesture
+                dock.addTarget(self, action: #selector(swipeFromBottom(_:)))
+                dock.maximumNumberOfTouches = 1
+                dock.delaysTouchesBegan = true
+                dock.delegate = self
+                bottomEdgeGesture = dock
+                view.addGestureRecognizer(dock)
+            }
         }
 
         func configure(view: UIView, enabled: Bool, mode: PointerMode, aspect: Double,
@@ -118,13 +129,16 @@ struct PointerSurface: UIViewRepresentable {
             self.isEnabled = enabled; self.mode = mode; self.frameAspect = aspect
             self.doubleTapAction = doubleTapAction; self.revealControls = revealControls
             for gesture in view.gestureRecognizers ?? [] {
-                if gesture === revealGesture { gesture.isEnabled = revealControls != nil }
+                if gesture === bottomEdgeGesture { gesture.isEnabled = enabled && mode == .nativeTouch }
+                else if gesture === revealGesture { gesture.isEnabled = revealControls != nil }
                 else if gesture === doubleRightGesture { gesture.isEnabled = enabled && mode == .direct && doubleTapAction == .rightClick }
                 else { gesture.isEnabled = enabled && mode != .nativeTouch }
             }
         }
 
         func cancelInteraction() {
+            (bottomEdgeGesture?.view as? PointerPadView)?.endEdgeSwipe()
+            edgeSwipeStart = nil
             lastTapTime = 0; lastTapPosition = nil
             revealStart = nil; panOrigin = nil; scrollOrigin = nil
             longDragging = false; panScrolled = false; panStartedOnImage = false; scrollStartedOnImage = false
@@ -248,6 +262,18 @@ struct PointerSurface: UIViewRepresentable {
             if [.ended, .cancelled, .failed].contains(gesture.state) { revealStart = nil }
         }
 
+        @objc private func swipeFromBottom(_ gesture: UIPanGestureRecognizer) {
+            guard let view = gesture.view as? PointerPadView else { return }
+            if gesture.state == .began, let start = edgeSwipeStart { view.beginEdgeSwipe(at: start) }
+            if [.began, .changed, .ended].contains(gesture.state) {
+                view.moveEdgeSwipe(to: gesture.location(in: view))
+            }
+            if gesture.state == .cancelled { view.cancelNativeTouches() }
+            if [.ended, .cancelled, .failed].contains(gesture.state) {
+                view.endEdgeSwipe(); edgeSwipeStart = nil
+            }
+        }
+
         private func position(_ point: CGPoint, in bounds: CGRect, clamped: Bool = false) -> CGPoint? {
             DesktopTouchGeometry.normalized(point, in: bounds, aspect: frameAspect, clamped: clamped)
         }
@@ -296,10 +322,23 @@ struct PointerSurface: UIViewRepresentable {
             guard isEnabled else { return false }; input.scrollContent(dx: dx, dy: dy); return true
         }
         func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+            if gestureRecognizer === bottomEdgeGesture {
+                guard let gesture = bottomEdgeGesture, let start = edgeSwipeStart else { return false }
+                return prepareEdgeSwipe(gesture, startingAt: start)
+            }
             if gestureRecognizer === revealGesture, let gesture = revealGesture { return prepareReveal(gesture) }
             if gestureRecognizer === pointerPanGesture, let gesture = pointerPanGesture { return preparePan(gesture) }
             if gestureRecognizer === scrollGesture, let gesture = scrollGesture { return preparePan(gesture, scrolling: true) }
             return isEnabled
+        }
+        func prepareEdgeSwipe(_ gesture: UIPanGestureRecognizer, startingAt start: CGPoint) -> Bool {
+            guard isEnabled, mode == .nativeTouch, let view = gesture.view as? PointerPadView else { return false }
+            let velocity = gesture.velocity(in: view)
+            guard velocity.y < 0, -velocity.y > abs(velocity.x) * 1.5,
+                  let candidate = view.edgeSwipeStart(at: start) else { return false }
+            if candidate.gesture == .dock && velocity.y > -250 { return false }
+            edgeSwipeStart = start
+            return true
         }
         func prepareReveal(_ gesture: UIPanGestureRecognizer) -> Bool {
             guard revealControls != nil, let view = gesture.view else { return false }
@@ -318,6 +357,16 @@ struct PointerSurface: UIViewRepresentable {
             return mode == .trackpad || position(start, in: view.bounds) != nil
         }
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            if gestureRecognizer === bottomEdgeGesture, let view = gestureRecognizer.view as? PointerPadView {
+                if [.began, .changed].contains(gestureRecognizer.state) { return true }
+                let start = touch.location(in: view)
+                guard isEnabled, mode == .nativeTouch, view.edgeSwipeCandidate(at: start) != nil else {
+                    edgeSwipeStart = nil
+                    return false
+                }
+                edgeSwipeStart = start
+                return true
+            }
             guard gestureRecognizer === revealGesture, let view = gestureRecognizer.view else { return isEnabled }
             return revealControls != nil && ControlsRevealGesture.startsAtEdge(touch.location(in: view), in: view.bounds)
         }
