@@ -109,6 +109,7 @@
 		C4721D427819BBB1F4963DF3 /* MacCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACC93700110E949E74324157 /* MacCard.swift */; };
 		C7D0FDD829D8F3B3BC2E117F /* FileTransferSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 588095CDC5FE48ED7C6B84FB /* FileTransferSection.swift */; };
 		CA86A6DC547B11BEEE5A76B2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E6CA9B8823FBC5D1C8B5E618 /* Assets.xcassets */; };
+		CAB33A903C7FCAF9676B51AC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40DD79F6131C7F831D7321C /* SettingsView.swift */; };
 		CC91620A6D4146E26B76A4E0 /* RemoteModifier+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83CDA62D8208BC4DEA0B9698 /* RemoteModifier+Presentation.swift */; };
 		CD11AD32B6162271B409B800 /* WorkspaceModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D276C96DB6FE4912865BF71 /* WorkspaceModeButton.swift */; };
 		D160E1577B9BE47202C0FDE6 /* SessionPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A94CA0BA8D3613336A1A8C64 /* SessionPresentation.swift */; };
@@ -120,6 +121,7 @@
 		D49046ABC55EE8111E89AAAD /* FunctionKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17E4E666A9055EA2E3D0CD31 /* FunctionKeyTests.swift */; };
 		D5A2ADF2D3BF6FC45BC0A0A8 /* SessionActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91C367078CD17634F0E06AD0 /* SessionActions.swift */; };
 		D732A0DE89D1A14C716CF269 /* SessionDoneToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230E6BA533402F69F5B5E4FE /* SessionDoneToolbar.swift */; };
+		D799362C8524D65A3A509D87 /* DockVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67839FE319E52E5F75A7699A /* DockVisibility.swift */; };
 		D87EDC8A3C07D378A0F0CCE8 /* DesktopSizing+Presentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EF02FDA203B7BFA80386CC /* DesktopSizing+Presentation.swift */; };
 		DA00BBEDB6392BABAF04D86A /* DesktopSizingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F367834C43D572AAF808BC /* DesktopSizingOptions.swift */; };
 		DBF6CE4414E2A80835750DB6 /* RegionEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F825BF2E2338C4FB8CC45C /* RegionEnvironment.swift */; };
@@ -200,6 +202,7 @@
 		49F47A3336880A853BEEEDBB /* RegionContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionContent.swift; sourceTree = "<group>"; };
 		4A1365A8C31C2989A54F5381 /* SessionControlPlacement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionControlPlacement.swift; sourceTree = "<group>"; };
 		4D1282EA601E4E331723EDEA /* MacOptionsMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacOptionsMenu.swift; sourceTree = "<group>"; };
+		F081F2C6F5B250BA29ED1E63 /* DuoWorkspace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DuoWorkspace; path = .; sourceTree = SOURCE_ROOT; };
 		55DA2EE3C74DC1F5B42E9F1B /* DesktopShapePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopShapePicker.swift; sourceTree = "<group>"; };
 		5858AC7E8655A39F45192C07 /* SpecialKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialKey.swift; sourceTree = "<group>"; };
 		588095CDC5FE48ED7C6B84FB /* FileTransferSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferSection.swift; sourceTree = "<group>"; };
@@ -213,6 +216,7 @@
 		656B62FF2E8CC4C40D598864 /* SessionDisplayTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDisplayTests.swift; sourceTree = "<group>"; };
 		66339E95512EA856994F5E3C /* HostView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostView.swift; sourceTree = "<group>"; };
 		67282F0F66C179FE2AC895C0 /* TabletopControlDeck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabletopControlDeck.swift; sourceTree = "<group>"; };
+		67839FE319E52E5F75A7699A /* DockVisibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DockVisibility.swift; sourceTree = "<group>"; };
 		68D84ADB15DA177EDBBC98F2 /* KeyboardPresenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardPresenceView.swift; sourceTree = "<group>"; };
 		6A841302018112E9B9697266 /* ConnectionOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionOverlay.swift; sourceTree = "<group>"; };
 		6ADB8D4E7BA7339B7153D286 /* SessionFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionFiles.swift; sourceTree = "<group>"; };
@@ -263,6 +267,7 @@
 		AF180E37544D886F60E40A9D /* ReceivedFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedFile.swift; sourceTree = "<group>"; };
 		AFB6AE073EBF7C83834554E4 /* KeyboardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardPresentation.swift; sourceTree = "<group>"; };
 		B01C5FFE04352280FE621068 /* PairingSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairingSection.swift; sourceTree = "<group>"; };
+		B40DD79F6131C7F831D7321C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B61957B84DF75108230306A0 /* HardwareModifierMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareModifierMapping.swift; sourceTree = "<group>"; };
 		B740D39D19FC76D502BDDC9C /* KeyboardAvoidingRegion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardAvoidingRegion.swift; sourceTree = "<group>"; };
 		B8B5330446CC86C7BA0C0C6D /* FileTransferFailureText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTransferFailureText.swift; sourceTree = "<group>"; };
@@ -297,7 +302,6 @@
 		E7041A646A3FA4F146A6D598 /* ControlsRevealGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsRevealGesture.swift; sourceTree = "<group>"; };
 		E7F825BF2E2338C4FB8CC45C /* RegionEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionEnvironment.swift; sourceTree = "<group>"; };
 		EF4578BCB171A4FFF58DD59F /* SessionNativeTouch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionNativeTouch.swift; sourceTree = "<group>"; };
-		F081F2C6F5B250BA29ED1E63 /* DuoWorkspace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = DuoWorkspace; path = .; sourceTree = SOURCE_ROOT; };
 		F4F367834C43D572AAF808BC /* DesktopSizingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesktopSizingOptions.swift; sourceTree = "<group>"; };
 		F52BE35F12E0942E09787BCB /* NativeTouchInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeTouchInfo.swift; sourceTree = "<group>"; };
 		F57F9E266457AAA35D3D69AF /* TrackpadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackpadView.swift; sourceTree = "<group>"; };
@@ -393,6 +397,7 @@
 			children = (
 				38EBFF2C30BCB2F07E088CEA /* Assets.xcassets */,
 				80F6CDF21F79B758A2662E49 /* DeviceAccessSection.swift */,
+				67839FE319E52E5F75A7699A /* DockVisibility.swift */,
 				79DE2287EF756EB66EAFB192 /* DuoHostApp.swift */,
 				70D28CEB62CAF0886DF723B8 /* DuoWorkspaceHost.entitlements */,
 				66339E95512EA856994F5E3C /* HostView.swift */,
@@ -402,6 +407,7 @@
 				B01C5FFE04352280FE621068 /* PairingSection.swift */,
 				1F8F663364CA16CD2B7A8042 /* PermissionRow.swift */,
 				27EDAC937EC095BB3CA0B472 /* PrivacyInfo.xcprivacy */,
+				B40DD79F6131C7F831D7321C /* SettingsView.swift */,
 			);
 			name = macOS;
 			path = Apps/macOS;
@@ -900,12 +906,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				F7BE37B466467CB547AA3980 /* DeviceAccessSection.swift in Sources */,
+				D799362C8524D65A3A509D87 /* DockVisibility.swift in Sources */,
 				1D36FBF37A2E35174631A8B1 /* DuoHostApp.swift in Sources */,
 				F1A63D6C1FA53BA3FBEB0708 /* HostView.swift in Sources */,
 				8E0BC5401D2559D8A723DCF9 /* InputTestWindow.swift in Sources */,
 				2AE13BB59C74E7367B664508 /* PairingApprovalSection.swift in Sources */,
 				183E503C428AD51EA96E23DE /* PairingSection.swift in Sources */,
 				934B3FD015D4BE121C981DF5 /* PermissionRow.swift in Sources */,
+				CAB33A903C7FCAF9676B51AC /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
