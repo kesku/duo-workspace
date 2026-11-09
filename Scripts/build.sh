@@ -17,6 +17,7 @@ else
     Scripts/setup-local-signing.sh "$duo_host_app"
 fi
 DUO_BUILD_ROOT="$duo_build_root" Scripts/test-microphone-driver.sh
+python3 Scripts/test-microphone-package.py
 swift test --scratch-path "$duo_build_root/swift"
 xcodebuild "${duo_host_build_args[@]}" build
 if [[ -f "$duo_apple_signing" ]]; then
