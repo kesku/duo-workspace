@@ -1,5 +1,6 @@
 import CoreGraphics
 import Foundation
+import Security
 import DuoCore
 
 @MainActor
@@ -15,10 +16,16 @@ protocol NativeTouchDevice: AnyObject {
 /// Accepts contacts only for the active, authorized display context.
 @MainActor
 final class NativeTouchController {
-    static var isSupported: Bool {
-        if #available(macOS 27.3, *) { return true }
-        return false
-    }
+    static var isSupported: Bool { systemSupportFailure == nil }
+
+    private static let systemSupportFailure: NativeTouchStatus.Failure? = {
+        guard #available(macOS 27.3, *) else { return .macOSVersion }
+        guard let task = SecTaskCreateFromSelf(nil),
+              SecTaskCopyValueForEntitlement(task, "com.apple.developer.hid.virtual.device" as CFString, nil) as? Bool == true else {
+            return .device
+        }
+        return nil
+    }()
 
     var onStatus: ((NativeTouchStatus) -> Void)?
     private(set) var status = NativeTouchStatus(.off)
@@ -32,7 +39,7 @@ final class NativeTouchController {
     private(set) var hasContacts = false
     private var displayID: CGDirectDisplayID = 0
     private var displayBounds = CGRect.zero
-    private let supported: Bool
+    private let supportFailure: NativeTouchStatus.Failure?
     private let allowed: () -> Bool
     private let makeDevice: () -> (any NativeTouchDevice)?
     private let now: () -> TimeInterval
@@ -40,7 +47,11 @@ final class NativeTouchController {
     init(supported: Bool? = nil, allowed: @escaping () -> Bool,
          now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime },
          makeDevice: (() -> (any NativeTouchDevice)?)? = nil) {
-        self.supported = supported ?? Self.isSupported
+        if let supported {
+            supportFailure = supported ? nil : .macOSVersion
+        } else {
+            supportFailure = Self.systemSupportFailure
+        }
         self.allowed = allowed; self.now = now
         self.makeDevice = makeDevice ?? {
             if #available(macOS 27.3, *) { return SystemNativeTouchDevice() }
@@ -61,7 +72,7 @@ final class NativeTouchController {
         let token = generation
         await retirement?.value
         guard requested, token == generation else { return }
-        guard supported else { publish(NativeTouchStatus(.unavailable, failure: .macOSVersion)); return }
+        if let supportFailure { publish(NativeTouchStatus(.unavailable, failure: supportFailure)); return }
         guard allowed() else { publish(NativeTouchStatus(.unavailable, failure: .permission)); return }
         guard let next = makeDevice() else {
             publish(NativeTouchStatus(.unavailable, failure: .macOSVersion))
