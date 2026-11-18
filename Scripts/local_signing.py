@@ -222,20 +222,18 @@ class LocalSigner:
             leaf = Path(prefix + "0")
             return leaf.read_bytes() if leaf.exists() else None  # ad-hoc code has no certificate
 
-    def sign_code(self, path, runtime=False, entitlements=None):
+    def sign_code(self, path, runtime=False):
         arguments = ["/usr/bin/codesign", "--force", "--timestamp=none", "--keychain", str(self.keychain),
                      "--sign", self.fingerprint]
         if runtime:
             arguments += ["--options", "runtime"]
-        if entitlements:
-            arguments += ["--entitlements", str(entitlements)]
         run(arguments + [str(path)])
 
     def verify(self, path):
         requirement = 'certificate leaf = H"' + self.fingerprint + '"'
         run(["/usr/bin/codesign", "--verify", "--deep", "--strict", "-R", "=" + requirement, os.path.abspath(path)])
 
-    def sign_host(self, app, runtime=False, entitlements=None):
+    def sign_host(self, app, runtime=False):
         app = Path(os.path.abspath(app))
         if app.is_symlink() or not app.is_dir():
             raise SigningError("Expected a built DuoWorkspaceHost.app directory.")
@@ -250,7 +248,7 @@ class LocalSigner:
             if path.is_symlink():
                 raise SigningError(f"The built host contains a code symlink: {path.name}. Inspect the bundle before signing.")
             self.sign_code(path, runtime=runtime)
-        self.sign_code(app, runtime=runtime, entitlements=entitlements)
+        self.sign_code(app, runtime=runtime)
         self.verify(app)
         print("Signed and verified Duo Workspace Host with its saved local identity.")
 
@@ -261,7 +259,6 @@ def main():
     parser.add_argument("--state-dir", required=True)
     parser.add_argument("--app")
     parser.add_argument("--runtime", action="store_true")
-    parser.add_argument("--entitlements")
     args = parser.parse_args()
     if sys.platform != "darwin":
         raise SigningError("Local host signing requires macOS.")
@@ -272,7 +269,7 @@ def main():
             if not args.app:
                 raise SigningError("Provide the built host with --app.")
             if args.action == "sign":
-                signer.sign_host(args.app, runtime=args.runtime, entitlements=args.entitlements)
+                signer.sign_host(args.app, runtime=args.runtime)
             else:
                 signer.validate_files()
                 signer.verify(args.app)

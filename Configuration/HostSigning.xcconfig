@@ -2,6 +2,8 @@
 PRODUCT_BUNDLE_IDENTIFIER = local.duoworkspace.host
 CODE_SIGNING_ALLOWED = NO
 DUO_LOCAL_SIGNING = YES
+DUO_HOST_ENTITLEMENTS_NO = Apps/macOS/DuoWorkspaceHost.entitlements
+CODE_SIGN_ENTITLEMENTS = $(DUO_HOST_ENTITLEMENTS_$(DUO_LOCAL_SIGNING))
 
 // Keep developer-team and App ID settings local to each checkout.
 #include? "../.secrets/AppleDevelopment.xcconfig"

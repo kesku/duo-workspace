@@ -88,18 +88,19 @@ class LocalSigningTests(unittest.TestCase):
         self.assertEqual(certificate, signer.certificate.read_bytes())
         self.assertTrue(password_hash == hashlib.sha256(signer.password_file.read_bytes()).digest())
 
-    def test_native_touch_entitlement_preserves_identity(self):
+    def test_local_host_signing_omits_native_touch_entitlement(self):
         signer = self.ensure(self.root / "identity")
         app = self.fixture_app()
-        with signing.locked_state(signer.directory):
-            signer.sign_host(app)
-        requirement = self.requirement(app)
-        with signing.locked_state(signer.directory):
-            signer.sign_host(app, entitlements=ROOT / "Apps/macOS/DuoWorkspaceHost.entitlements")
-        self.assertEqual(requirement, self.requirement(app))
-        result = subprocess.run(["/usr/bin/codesign", "-d", "--entitlements", ":-", str(app)],
+        signing.run(["/usr/bin/codesign", "--force", "--timestamp=none", "--keychain", str(signer.keychain),
+                     "--sign", signer.fingerprint, "--entitlements", str(ROOT / "Apps/macOS/DuoWorkspaceHost.entitlements"),
+                     str(app)])  # Simulate rebuilding over a host signed by the previous local script.
+        subprocess.run([str(ROOT / "Scripts/sign-local-host.sh"), str(app)],
+                       env={**os.environ, "DUO_SIGNING_DIR": str(signer.directory)},
+                       capture_output=True, check=True)
+        signer.verify(app)
+        result = subprocess.run(["/usr/bin/codesign", "-d", "--entitlements", "-", "--xml", str(app)],
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
-        self.assertTrue(plistlib.loads(result.stdout)["com.apple.developer.hid.virtual.device"])
+        self.assertNotIn("com.apple.developer.hid.virtual.device", plistlib.loads(result.stdout) if result.stdout else {})
 
     def test_paths_are_literal_and_passwords_never_enter_arguments(self):
         arguments = []

@@ -24,7 +24,7 @@ Edit `project.yml` when adding files or changing targets, then run `xcodegen gen
 
 ## Signing and installation
 
-The default build creates and reuses a local host-signing identity in `.secrets/`. The simulator client uses ad-hoc signing. This mode requires no Apple Developer account.
+The default build creates and reuses a local host-signing identity in `.secrets/`. The simulator client uses ad-hoc signing. This mode requires no Apple Developer account and leaves native touch unavailable.
 
 Keep `.secrets/` when moving the checkout, or point `DUO_SIGNING_DIR` at the existing signing folder. If signing files are damaged or incomplete, the build stops. Restore the originals; replacing the identity requires new Mac permissions.
 
@@ -44,6 +44,8 @@ The host target reads this file in Xcode and `Scripts/build.sh`. For Native touc
 For a physical device, open `DuoWorkspace.xcodeproj`, choose your team and a unique client bundle identifier in Signing & Capabilities, then run. Personal Team installs need periodic reprovisioning. Keep personal signing settings out of commits.
 
 Allow Duo Workspace Host under Screen & System Audio Recording and Accessibility. Reopen the host if macOS asks. Native touch also needs virtual HID access; see [its setup](NativeTouch.md#running-it).
+
+For Developer ID distribution, `Scripts/package-host.sh` leaves native touch off by default. To enable it, install the approved Developer ID provisioning profile for the host App ID and set `DUO_DEVELOPER_ID_PROFILE` to the profile's name. The script verifies that the archive claims the entitlement and that its embedded profile authorizes it for all Macs before creating the ZIP.
 
 ## Testing
 
