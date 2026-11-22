@@ -16,7 +16,12 @@ for arch in arm64 x86_64; do
 done
 xcrun lipo -create "$build/DuoMicrophone-arm64" "$build/DuoMicrophone-x86_64" \
     -output "$bundle/Contents/MacOS/DuoMicrophone"
-codesign --force --sign - --timestamp=none "$bundle"
+if [[ -n "${DUO_DEVELOPER_ID_INSTALLER:-}" ]]; then
+    : "${DUO_DEVELOPER_ID:?Set your Developer ID Application signing identity for the microphone driver.}"
+    codesign --force --sign "$DUO_DEVELOPER_ID" --timestamp --options runtime "$bundle"
+else
+    codesign --force --sign - --timestamp=none "$bundle"
+fi
 codesign --verify --strict "$bundle"
 root="$build/package-root"
 mkdir -p "$root/Library/Audio/Plug-Ins/HAL"
@@ -25,8 +30,15 @@ ditto "$bundle" "$root/Library/Audio/Plug-Ins/HAL/DuoMicrophone.driver"
 chmod -R u=rwX,go=rX "$root"
 pkgbuild --root "$root" --identifier local.duoworkspace.microphone \
     --version "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' Drivers/DuoMicrophone/Info.plist)" --scripts Scripts/MicrophoneInstaller "$build/DuoMicrophone.pkg" >/dev/null
+package="$build/DuoMicrophone.pkg"
+if [[ -n "${DUO_DEVELOPER_ID_INSTALLER:-}" ]]; then
+    package="$build/DuoMicrophone-signed.pkg"
+    rm -f "$package"
+    productsign --sign "$DUO_DEVELOPER_ID_INSTALLER" --timestamp "$build/DuoMicrophone.pkg" "$package"
+    pkgutil --check-signature "$package"
+fi
 if [[ -n "${1:-}" ]]; then
     mkdir -p "$1"
-    cp "$build/DuoMicrophone.pkg" "$1/DuoMicrophone.pkg"
+    cp "$package" "$1/DuoMicrophone.pkg"
 fi
 echo "Built Duo Microphone driver and installer."
