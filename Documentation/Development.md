@@ -47,6 +47,8 @@ Allow Duo Workspace Host under Screen & System Audio Recording and Accessibility
 
 For Developer ID distribution, `Scripts/package-host.sh` leaves native touch off by default. To enable it, install the approved Developer ID provisioning profile for the host App ID and set `DUO_DEVELOPER_ID_PROFILE` to the profile's name. The script verifies that the archive claims the entitlement and that its embedded profile authorizes it for all Macs before creating the ZIP.
 
+For notarization, set `DUO_NOTARY_PROFILE` to a saved `notarytool` Keychain profile and `DUO_DEVELOPER_ID_INSTALLER` to a Developer ID Installer identity. The packaging script signs and timestamps the microphone driver and installer before submitting the host.
+
 ## Testing
 
 Run `/usr/bin/python3 Scripts/test-local-signing.py` to check signing with disposable keychains.
